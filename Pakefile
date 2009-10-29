@@ -1,0 +1,10 @@
+<?php
+require __DIR__.'/config/boot.php';
+require 'tasks/misago.php';
+
+namespace db;
+
+desc("");
+task('');
+
+?>

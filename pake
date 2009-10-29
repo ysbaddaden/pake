@@ -1,0 +1,18 @@
+#! /usr/bin/php
+<?php
+if (!file_exists('Pakefile')) {
+  echo "Error: missing Pakefile.\n";
+}
+echo "(in ".getcwd().")\n\n";
+
+include __DIR__.'/lib/pake.php';
+include __DIR__.'/lib/file_utils.php';
+
+function task($task, $desc='') {
+  \Pake\Pake::task($task, $desc);
+}
+
+include 'Pakefile';
+$pake = new \Pake\Pake();
+$pake->run();
+?>
