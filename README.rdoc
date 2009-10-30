@@ -1,0 +1,92 @@
+= pake is not make
+
+pake is not a building tool like make or rake. pake is meant to
+provide centralized command-line scripts to your PHP 5 projects.
+
+All it requires is a Pakefile, which is a plain PHP, and to use two
+simple functions: +desc()+ and +task()+. Any argument passed on the
+command line will be passed as function arguments to your tasks.
+
+== Pakefile examples
+
+ <?php
+ desc('clears the cache');
+ task('clear_cache');
+ 
+ function clear_cache($path=null)
+ {
+   
+ }
+ ?>
+
+You can then invoke this task with:
+
+ $ pake clear_cache
+ $ pake clear_cache path/to/tmp
+
+You may also specify the function's name:
+
+ <?php
+ desc('creates cache directory');
+ task('create_cache', tmp_create_cache);
+ 
+ function tmp_create_cache($path=null)
+ {
+   
+ }
+ ?>
+
+You can then invoke these tasks the same way that you invoked
++clear_cache+.
+
+Of course you may include/require external files:
+
+ <?php
+ include 'tasks/tmp.rake';
+ include 'tasks/database.rake';
+ ?>
+
+= PHP 5.3 example:
+
+If you are running PHP 5.3, you may use namespaces and closures,
+leading to some nicer code.
+
+ <?php
+ namespace tmp;
+ 
+ desc('creates tmp subdirectories');
+ task('tmp:create');
+ 
+ function create()
+ {
+   
+ }
+ 
+ desc('clears the cache');
+ task('tmp:clear', function($path=null)
+ {
+   
+ });
+ ?>
+
+You can then invoke those tasks using:
+
+ $ pake tmp:create
+ $ pake tmp:clear
+ $ pake tmp:clear path/to/tmp
+ 
+== Get the list of tasks
+
+You may list the avaiable tasks by simple typing +pake+:
+
+ $ pake
+ (in /path/to/myapp)
+ 
+ tmp:clear   clears the cache
+ tmp:create  creates tmp subdirectories
+
+== Libraires
+
+pake provides a very basic +Pake_FileUtils+ class, but nothing as sexy as
+rake classes (FileList, CLEAN, etc). Hey, patches are welcome :)
+
