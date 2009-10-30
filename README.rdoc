@@ -4,8 +4,7 @@ pake is not a building tool like make or rake. pake is meant to
 provide centralized command-line scripts to your PHP 5 projects.
 
 All it requires is a Pakefile, which is a plain PHP, and to use two
-simple functions: +desc()+ and +task()+. Any argument passed on the
-command line will be passed as function arguments to your tasks.
+simple functions: +desc+ (optional) and +task+.
 
 == Pakefile examples
 
@@ -39,12 +38,34 @@ You may also specify the function's name:
 You can then invoke these tasks the same way that you invoked
 +clear_cache+.
 
-Of course you may include/require external files:
+Of course, being some PHP, you may include/require external files
+from your Pakefile:
 
  <?php
  include 'tasks/tmp.rake';
  include 'tasks/database.rake';
  ?>
+
+== Arguments and environments variables
+
+Any argument passed on the command line will be passed as function
+arguments to your tasks. Uppercased arguments, like +STEP=2+ will
+be processed as an environment variable, and will thus set
++$_SERVER['STEP'] = 2+.
+
+For instance:
+
+ <?php
+ task('db:migrate', 'db_migrate');
+ 
+ function db_migrate($command)
+ {
+   if (!isset($_SERVER['STEP'])) $_SERVER['STEP'] = 1;
+   
+ }
+ ?>
+
+ $ pake db:migrate redo STEP=2
 
 = PHP 5.3 example:
 
@@ -74,7 +95,7 @@ You can then invoke those tasks using:
  $ pake tmp:create
  $ pake tmp:clear
  $ pake tmp:clear path/to/tmp
- 
+
 == Get the list of tasks
 
 You may list the avaiable tasks by simple typing +pake+:
@@ -88,5 +109,5 @@ You may list the avaiable tasks by simple typing +pake+:
 == Libraires
 
 pake provides a very basic +Pake_FileUtils+ class, but nothing as sexy as
-rake classes (FileList, CLEAN, etc). Hey, patches are welcome :)
+rake classes (+FileList+, +CLEAN+, etc). Hey, patches are welcome :)
 
