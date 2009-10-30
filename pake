@@ -1,18 +1,12 @@
-#! /usr/bin/php
-<?php
-if (!file_exists('Pakefile')) {
-  echo "Error: missing Pakefile.\n";
-}
-echo "(in ".getcwd().")\n\n";
+#! /bin/sh
 
-include __DIR__.'/lib/pake.php';
-include __DIR__.'/lib/file_utils.php';
+if test "$PAKE_HOME" = ""; then
+  export PAKE_HOME="$PWD"
+fi
 
-function task($task, $desc='') {
-  \Pake\Pake::task($task, $desc);
-}
+echo "(in $PAKE_HOME)"
+echo ""
 
-include 'Pakefile';
-$pake = new \Pake\Pake();
-$pake->run();
-?>
+INSTALL_DIR="$(dirname "$(test -L "$0" && readlink "$0" || echo "$0")")"
+/usr/bin/env php "$INSTALL_DIR/pake.php" $@
+

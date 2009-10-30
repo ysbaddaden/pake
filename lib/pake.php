@@ -7,16 +7,17 @@ class Pake
   protected $command = 'default';
   protected $args    = array();
   
+  static protected $desc  = '';
   static protected $tasks = array();
   
   function __construct()
   {
     if ($_SERVER['argc']) {
-      $this->parse_args(array_slice($_SERVER['argv'], 1));
+      $this->parse_arguments(array_slice($_SERVER['argv'], 1));
     }
   }
   
-  protected function parse_args($args)
+  protected function parse_arguments($args)
   {
     foreach($args as $i => $arg)
     {
@@ -38,12 +39,14 @@ class Pake
   {
     if ($this->command != 'default')
     {
-      $cmd = str_replace(':', '\\', $this->command);
-      if (function_exists($cmd)) {
-        call_user_func_array($cmd, $this->args);
+      $task = self::$tasks[$this->command];
+      $func = is_string($task['func']) ? str_replace(':', '\\', $task['func']) : $task['func'];
+      
+      if (is_callable($func)) {
+        call_user_func_array($func, $this->args);
       }
       else {
-        echo "Error: no such task '$cmd'\n";
+        echo "Error: no such task '$func'\n";
       }
     }
     else {
@@ -57,21 +60,29 @@ class Pake
     foreach(array_keys(self::$tasks) as $task) {
       $length = max($length, strlen($task));
     }
-    
     ksort(self::$tasks);
     
     echo "Available tasks:\n\n";
-    foreach(self::$tasks as $task => $desc)
+    foreach(self::$tasks as $task => $data)
     {
       echo "  ".str_pad($task, $length)."  ".
-        str_replace("\n", "\n".str_repeat(' ', $length + 4), wordwrap($desc, 79 - $length - 4))."\n";
+        str_replace("\n", "\n".str_repeat(' ', $length + 4), wordwrap($data['desc'], 79 - $length - 4))."\n";
     }
     echo "\n";
   }
   
-  static function task($task, $desc='')
+  static function desc($desc)
   {
-    self::$tasks[$task] = $desc;
+    self::$desc = $desc;
+  }
+  
+  static function task($task, $func=null)
+  {
+    self::$tasks[$task] = array(
+      'desc' => self::$desc,
+      'func' => ($func === null) ? $task : $func,
+    );
+    self::$desc = '';
   }
 }
 
