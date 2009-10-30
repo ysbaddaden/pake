@@ -1,34 +1,34 @@
 <?php
 
-namespace Pake\FileUtils;
-
-function mkdir($path, $mode=0775)
+class Pake_FileUtils
 {
-  if (!file_exists($path)) {
-    \mkdir($path, $mode, true);
-  }
-}
-
-function rmdir($path)
-{
-  if (file_exists($path))
+  function mkdir($path, $mode=0775)
   {
-    $d = dir($path);
-    while(($f = $d->read()) !== false)
-    {
-      if ($f == '.' or $f == '..') continue;
-      
-      if (is_dir("$path/$f"))
-      {
-        rmdir("$path/$f");
-        \rmdir("$path/$f");
-      }
-      else {
-        unlink("$path/$f");
-      }
+    if (!file_exists($path)) {
+      mkdir($path, $mode, true);
     }
-    $d->close();
+  }
+
+  function rmdir($path)
+  {
+    if (file_exists($path))
+    {
+      $d = dir($path);
+      while(($f = $d->read()) !== false)
+      {
+        if ($f == '.' or $f == '..') continue;
+        
+        if (is_dir("$path/$f"))
+        {
+          self::rmdir("$path/$f");
+          rmdir("$path/$f");
+        }
+        else {
+          unlink("$path/$f");
+        }
+      }
+      $d->close();
+    }
   }
 }
-
 ?>

@@ -1,7 +1,5 @@
 <?php
 
-namespace Pake;
-
 class Pake
 {
   protected $command = 'default';
