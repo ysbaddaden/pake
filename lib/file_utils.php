@@ -2,14 +2,14 @@
 
 class Pake_FileUtils
 {
-  function mkdir($path, $mode=0775)
+  static function mkdir($path, $mode=0775)
   {
     if (!file_exists($path)) {
       mkdir($path, $mode, true);
     }
   }
 
-  function rmdir($path)
+  static function rmdir($path)
   {
     if (file_exists($path))
     {
