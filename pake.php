@@ -18,7 +18,8 @@ function task($task, $func=null) {
   Pake::task($task, $func);
 }
 
-include 'Pakefile';
+chdir($_SERVER['PAKE_HOME']);
+include "{$_SERVER['PAKE_HOME']}/Pakefile";
 $pake = new Pake();
 $pake->run();
 
