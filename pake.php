@@ -1,7 +1,7 @@
 <?php
 
 if (!file_exists("{$_SERVER['PAKE_HOME']}/Pakefile")) {
-  echo "Error: missing Pakefile.\n";
+  die("Error: missing Pakefile.\n");
 }
 
 include __DIR__.'/lib/pake.php';
