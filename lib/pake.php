@@ -8,10 +8,10 @@ class Pake
   static protected $desc  = '';
   static protected $tasks = array();
   
-  function __construct()
+  function __construct($argv=array())
   {
-    if ($_SERVER['argc']) {
-      $this->parse_arguments(array_slice($_SERVER['argv'], 1));
+    if (!empty($argv)) {
+      $this->parse_arguments($argv);
     }
   }
   

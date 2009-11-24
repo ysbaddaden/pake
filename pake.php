@@ -1,9 +1,6 @@
 <?php
 
-if (isset($_SERVER['PAKE_HOME'])) {
-  chdir($_SERVER['PAKE_HOME']);
-}
-if (!file_exists('Pakefile')) {
+if (!file_exists("{$_SERVER['PAKE_HOME']}/Pakefile")) {
   echo "Error: missing Pakefile.\n";
 }
 
@@ -18,9 +15,17 @@ function task($task, $func=null) {
   Pake::task($task, $func);
 }
 
-chdir($_SERVER['PAKE_HOME']);
+function pake($args)
+{
+  if (!is_array($args)) {
+    $args = preg_split('/\s+/', $args, PREG_SPLIT_NO_EMPTY);
+  }
+  $pake = new Pake($args);
+  $pake->run();
+}
+
 include "{$_SERVER['PAKE_HOME']}/Pakefile";
-$pake = new Pake();
+$pake = new Pake(array_slice($_SERVER['argv'], 1));
 $pake->run();
 
 ?>
